@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Numerical methods module """
-# Colection of classic numerical methods in Python 
+# Colection of classic numerical methods in Python(3.5)
 # Author: Martin Noblía
 
 #**********************************************************************
@@ -17,7 +17,7 @@ import numpy as np
 def forward_subs(L, b):
 
     """
-    Function for computing the forward substitution 
+    Function for computing the forward substitution
 
     Inputs:
     L: lower triangular matrix
@@ -39,14 +39,14 @@ def forward_subs(L, b):
     return x
 
 #**********************************************************************
-#Funtion backward 
+# Function backward
 #**********************************************************************
 
 
 def backward_subs(U, b):
     """
     Function for computing the backward substitution
-    
+
     Inputs:
     U: upper triangular matrix
     b: input vector
@@ -57,11 +57,10 @@ def backward_subs(U, b):
     n = np.size(U, 1)
     x = np.zeros_like(b, float)
 
-    #x[n-1] = b[n-1] / U[n-1, n-1]
 
-    for k in xrange(n-1, -1, -1):
+    for k in range(n-1, -1, -1):
 
-        x[k] = (b[k] - np.dot(U[k, k+1:n], x[k+1:n])) / U[k, k]
+        x[k] = (b[k] - (U[k, k+1:n] @ x[k+1:n])) / U[k, k] # the dot product @
 
     return x
 
@@ -97,12 +96,12 @@ def lu_fact(A):
     return L, U
 #**********************************************************************
 # Gauss elmination
-#**********************************************************************    
+#**********************************************************************
 def gauss_elimination(A, b):
-        
+
     """
     Function for computing the Gauss elimination method
-        
+
     Inputs:
     A: Matrix of the system
     b: Vector of inputs
@@ -122,9 +121,9 @@ def gauss_elimination(A, b):
     for k in xrange(n-1,-1,-1):
         b[k] = (b[k] - np.dot(A[k, k+1:n]),b[k+1:n]) / A[k,k]
     return b
-        
+
 #**********************************************************************
-#Factorizacion de Cholesky
+# Cholesky factorization
 #**********************************************************************
 
 def cholesky_fact(a):
@@ -141,7 +140,7 @@ def cholesky_fact(a):
         a[0:k, k] = 0.0
     return a
 #**********************************************************************
-# Metodos iterativos
+# Iterative methods
 #**********************************************************************
 #Gauss-Seidel
 
