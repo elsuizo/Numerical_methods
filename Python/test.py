@@ -34,10 +34,29 @@ class MyTest(unittest.TestCase):
 
         n = 4
         A = np.random.random((n,n))
-        A = np.triu(A)
+        U = np.triu(A)
         x = np.ones(n)
-        b = A @ x
-        self.assertEqual(np.allclose(backward_subs(A, b), x), True)
+        b = U @ x
+        self.assertEqual(np.allclose(backward_subs(U, b), x), True)
+
+    def test_forward_subs(self):
+
+        n = 4
+        A = np.random.random((n,n))
+        L = np.tril(A)
+        x = np.ones(n)
+        b = L @ x
+
+        self.assertEqual(np.allclose(forward_subs(L, b), x), True)
+
+    def test_lu_fact(self):
+
+        n = 4
+        A = np.random.random((n,n))
+        B = np.copy(A)
+        L, U = lu_fact(A)
+        self.assertEqual(np.allclose((L @ U - B), np.zeros_like(B)), True)
+
 
 unittest.main()
 
