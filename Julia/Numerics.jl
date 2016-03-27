@@ -1,41 +1,62 @@
-#-------------------------------------------------------------------------
-# Classic numerical methods algorithms in Julia 
-#-------------------------------------------------------------------------
+__precompile__()
+"""
+classic numerical methods algorithms in julia 
+"""
 module Numeric
 
-export forward_subs, backward_subs
 
-#-------------------------------------------------------------------------
-# Fordward substitution to solve linear systems
-#-------------------------------------------------------------------------
-function forward_subs(L, b)
+"""
+`forward_subs(l, b)`
+
+compute the forward substitution algorithm to solve linear system
+
+input:
+-----
+L(array{number, 2}): lower triangle matrix
+b(array{number, 1}): vector of coeficients
+
+output:
+------
+x(array{number, 1}): vector solution of the system
+"""
+function forward_subs{T<:Number}(L::Array{T,2}, b::Array{T,1})
     
     n, m = size(L)
-    
-    if n != m 
-        error("The matrix must be square")
+    if(n != m)
+        error("The matrix must be square") 
     end
-    
     if minimum(abs(diag(L))) == 0 
         error("The system is singular")
     end
-    
-    for j = 1:n-1
-    
-        b[j] = b[j] / L[j,j]
-        b[j+1:n] = b[j+1:n] - b[j] * L[j+1:n, j]
+    x = zeros(n)    
+    x[1] = b[1] / L[1,1]
+    # FIXME(elsuizo) cambiar L[i, 1:i]'[1:end] ⋅ x[1:i] para la version .5 que
+    # si devuelve Array{Float64,1}
+    for i = 2:n
+        @show x[i] = (b[i] - (L[i, 1:i]'[1:end] ⋅ x[1:i])) / L[i, i]
     end
-    b[n] = b[n] / L[n,n]
-    return b
+    return x
 end
 
-#-------------------------------------------------------------------------
-# Backward substitution for solve linear systems
-#-------------------------------------------------------------------------
-function backward_subs(U, b)
+
+"""
+`backward_subs(U, b)`
+
+compute the backward substitution algorithm to solve linear system
+
+input:
+-----
+U(array{number, 2}): upper triangle matrix
+b(array{number, 1}): vector of coeficients
+
+output:
+------
+x(array{number, 1}): vector solution of the system
+"""
+function backward_subs{T<:Number}(U::Array{T,2}, b::Array{T,1})
     n, m = size(U)
     
-    if n != m 
+    if (n != m) 
         error("The matrix must be square")
     end
     
@@ -43,15 +64,14 @@ function backward_subs(U, b)
         error("The system is singular")
     end
     
-    for j = n:-1:2
-        b[j] = b[j] / U[j,j]
-        b[1:j-1] = b[1:j-1] - b[j] * U[1:j-1,j]
+    x = zeros(n)    
+    # FIXME(elsuizo) cambiar L[i, 1:i]'[1:end] ⋅ x[1:i] para la version .5 que
+    for i = n:-1:1
+        x[i] = (b[i] - (U[i, i+1:n]'[1:end] ⋅ x[i+1:n])) / U[i, i] #
     end
     
-    b[1] = b[1] / U[1,1]
     
-    return b
+    return x
 end
-
 
 end
