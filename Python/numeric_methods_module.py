@@ -20,10 +20,12 @@ def forward_subs(L, b):
     Function for computing the forward substitution
 
     Inputs:
+    -------
     L: lower triangular matrix
     b: input vector
 
     Output:
+    -------
     x: Solution of the system
 
     """
@@ -32,9 +34,9 @@ def forward_subs(L, b):
 
     x[0] = b[0] / L[0, 0]
 
-    for i in xrange(1, n):
+    for i in range(1, n):
 
-        x[i] = (b[i] - np.dot(L[i, 0:i], x[0:i])) / L[i, i]
+        x[i] = (b[i] - (L[i, 0:i] @ x[0:i])) / L[i, i]  #the dot product operator
 
     return x
 
@@ -48,10 +50,12 @@ def backward_subs(U, b):
     Function for computing the backward substitution
 
     Inputs:
+    -------
     U: upper triangular matrix
     b: input vector
 
     Output:
+    -------
     x: Solution of the system
     """
     n = np.size(U, 1)
@@ -73,9 +77,11 @@ def lu_fact(A):
     """
     Function for computing the LU factorization
     Inputs:
+    -------
     A: Matrix of the system
 
     Output:
+    -------
     L: Lower triangular matrix
     U: Upper triangular matrix
 
@@ -84,8 +90,8 @@ def lu_fact(A):
     L = np.zeros_like(A, float)
     U = np.zeros_like(A, float)
 
-    for k in xrange(0, n-1):
-        for i in xrange(k+1, n):
+    for k in range(0, n-1):
+        for i in range(k+1, n):
             if A[i, k] != 0.0:
                 lam = A[i, k] / A[k, k]
                 A[i, k+1:n] = A[i, k+1:n] - lam*A[k, k+1:n]
@@ -94,6 +100,7 @@ def lu_fact(A):
     L = np.tril(A, -1) + np.identity(n)
     U = np.triu(A)
     return L, U
+
 #**********************************************************************
 # Gauss elmination
 #**********************************************************************
@@ -103,10 +110,12 @@ def gauss_elimination(A, b):
     Function for computing the Gauss elimination method
 
     Inputs:
+    -------
     A: Matrix of the system
     b: Vector of inputs
 
     Outputs:
+    -------
     x: solution of the system
     """
     n = len(b) # dimenson of the vector b
