@@ -102,36 +102,6 @@ def lu_fact(A):
     return L, U
 
 #**********************************************************************
-# Gauss elmination
-#**********************************************************************
-def gauss_elimination(A, b):
-
-    """
-    Function for computing the Gauss elimination method
-
-    Inputs:
-    -------
-    A: Matrix of the system
-    b: Vector of inputs
-
-    Outputs:
-    -------
-    x: solution of the system
-    """
-    n = len(b) # dimenson of the vector b
-    # elimination phase
-    for k in xrange(0, n-1):
-        for i in xrange(k+1, n):
-            if A[i,k] != 0.0:
-                lam = A[i,k] / A[k,k]
-                A[i,k+1:n] = A[i,k+1:n] - lam * A[k,k+1:n]
-                b[i]  = b[i] - lam * b[k]
-    #back sustitution
-    for k in xrange(n-1,-1,-1):
-        b[k] = (b[k] - np.dot(A[k, k+1:n]),b[k+1:n]) / A[k,k]
-    return b
-
-#**********************************************************************
 # Cholesky factorization
 #**********************************************************************
 
