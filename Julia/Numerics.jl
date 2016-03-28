@@ -91,8 +91,6 @@ U(Array{Number, 2}) Upper triangle matrix
 function lu_fact{T<:Number}(A::Array{T, 2})
     
     n, m = size(A)
-    L = zeros(A) 
-    U = zeros(A) 
     if (n != m) 
         error("The matrix must be square")
     end
@@ -100,6 +98,10 @@ function lu_fact{T<:Number}(A::Array{T, 2})
     if minimum(abs(diag(A))) == 0 
         error("The system is singular")
     end
+
+    L = zeros(A) 
+    U = zeros(A) 
+
     for k in 1:n-1
         for i in k+1:n
             if (A[i, k] != zero(T))
@@ -115,7 +117,32 @@ function lu_fact{T<:Number}(A::Array{T, 2})
 
 end
 
+function cholesky_fac{T<:Number}(A::Array{T, 2})
 
+    n, m = size(A)
+    if (n != m) 
+        error("The matrix must be square")
+    end
+    
+    if minimum(abs(diag(A))) == 0 
+        error("The system is singular")
+    end
+
+    for k in 1:n-1
+        if(A[k, k] == 0)
+            error("Null or negative pivot element")
+        end
+        A[k, k] = sqrt(A[k, k])
+        A[k+1:n, k] = A[k+1:n, k] / A[k, k]
+        for j in k+1:n
+            A[j:n, j] = A[j:n, j] - A[j:n, k] * A[j, k]
+        end
+    end
+    A[n, n] = sqrt(A[n, n])
+    A = tril(A)
+    A = A'
+    return A
+end
 
 #-------------------------------------------------------------------------
 # end of Numerics
